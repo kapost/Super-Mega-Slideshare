@@ -3,7 +3,7 @@ require 'faraday'
 # @private
 module Faraday
   # @private
-  class Request::Multipart < Faraday::Middleware
+  class Request::Multipart < Request::UrlEncoded
     def call(env)
       if env[:body].is_a?(Hash)
         env[:body].each do |key, value|
