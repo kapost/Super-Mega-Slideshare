@@ -4,7 +4,7 @@ require "slideshare/version"
 #require File.expand_path('../lib/slideshare/version', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name        = "super-mega-slideshare"
+  s.name        = "slideshare"
   s.version     = Slideshare::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Edd Parris"]
