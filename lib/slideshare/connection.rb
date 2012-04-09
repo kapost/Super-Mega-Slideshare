@@ -1,8 +1,9 @@
-require 'faraday_middleware'
-require 'faraday/multipart'
-require 'faraday/raise_http_4xx'
-require 'faraday/raise_http_5xx'
-require 'faraday/parse_slideshare_xml'
+require 'hashie'
+require 'faraday'
+require 'slideshare/request/multipart_with_file'
+require 'slideshare/response/parse_xml'
+require 'slideshare/response/raise_client_error'
+require 'slideshare/response/raise_server_error'
 
 module Slideshare
   # @private
@@ -17,21 +18,15 @@ module Slideshare
         :url => api_endpoint,
       }
 
-      Faraday::Connection.new(options) do |connection|
-        connection.use Faraday::Request::Multipart #, authentication
-        #connection.use Faraday::Request::OAuth, authentication if authenticated?
-        connection.adapter(adapter)
-        connection.use Faraday::Response::RaiseHttp5xx
-        unless raw
-          case format.to_s.downcase
-          when 'json' then connection.use Faraday::Response::ParseJson # one can hope
-          when 'xml' then connection.use Faraday::Response::ParseSlideshareXml
-          end
-        end
-        connection.use Faraday::Response::RaiseHttp4xx
-        connection.use Faraday::Response::Mashify unless raw
+      Faraday::Connection.new(options) do |builder|
+        builder.use Slideshare::Request::MultipartWithFile
+        builder.use Faraday::Request::Multipart
+        builder.use Faraday::Request::UrlEncoded
+        builder.use Slideshare::Response::RaiseClientError
+        builder.use Slideshare::Response::ParseXml
+        builder.use Slideshare::Response::RaiseServerError
+        builder.adapter(adapter)
       end
     end
-    
   end
 end
