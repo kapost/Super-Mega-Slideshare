@@ -1,4 +1,4 @@
 module Slideshare
   # The version of the gem
-  VERSION = '0.1.2' #.freeze unless defined?(::Slideshare::VERSION)
+  VERSION = '1.0.0' #.freeze unless defined?(::Slideshare::VERSION)
 end
